@@ -124,6 +124,12 @@ module.exports = (env) ->
         @attributes = _.clone(@attributes)
       @attributes[name] = attribute
 
+    addAction: (name, action) ->
+      assert (not @_constructorCalled), "Actions can only be added in the constructor"
+      if @actions is @constructor.prototype.actions
+        @actions = _.clone(@actions)
+      @actions[name] = action
+
     updateName: (name) ->
       if name is @name then return
       @name = name
@@ -456,6 +462,13 @@ module.exports = (env) ->
   class TemperatureSensor extends Sensor
     _temperature: undefined
 
+    actions:
+      getTemperature:
+        description: "Returns the current temperature"
+        returns:
+          temperature:
+            type: t.number
+
     attributes:
       temperature:
         description: "The measured temperature"
@@ -478,6 +491,13 @@ module.exports = (env) ->
   class PresenceSensor extends Sensor
     _presence: undefined
 
+    actions:
+      getPresence:
+        description: "Returns the current presence state"
+        returns:
+          presence:
+            type: t.boolean
+
     attributes:
       presence:
         description: "Presence of the human/device"
@@ -499,6 +519,13 @@ module.exports = (env) ->
   ###
   class ContactSensor extends Sensor
     _contact: undefined
+
+    actions:
+      getContact:
+        description: "Returns the current state of the contact"
+        returns:
+          contact:
+            type: t.boolean
 
     attributes:
       contact:
